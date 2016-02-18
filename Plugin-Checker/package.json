@@ -1,0 +1,11 @@
+{
+  "name": "plugin-checker",
+  "version": "1.0.0",
+  "description": "This tool will let you test your plugin by simulating some of the Volumio behaviour",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Volumio",
+  "license": "ISC"
+}
