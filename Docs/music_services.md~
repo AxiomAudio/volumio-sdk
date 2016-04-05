@@ -17,7 +17,7 @@ To add the music library to the Volumio system the plugin shall invoke the coreC
 
 		self.commandRouter.volumioAddToBrowseSources(data);
 
-Through this call the system knows the any URI that starts witht the string myMusicLibraryURIStart shall be forwarded to the myMusicLibrary plugin for handling. Calling this method will add an entry in the "Browse" section in Volumio.
+Through this call the system knows that any URI that starts witht the string myMusicLibraryURIStart shall be forwarded to the myMusicLibrary plugin for handling. Calling this method will add an entry in the "Browse" section in Volumio.
 
 Any item in the music library is identified by a URI. These are returned by the plugin as content of the handleBrowseUri method which allows the browsing functionality (see method definition for a detailed structure). When the user clicks on an item in the browse section the method handleBrowseUri is invoked with the URI of the item as input parameter. The plugin shall handle this request and provide the following level of the tree, if any. Folders and items are specified in a different way in the response thus it is impossible for the UI to ask for a deeper level in case the plugin returned only files. When an item is put in the queue or directly played its URI is provided to the plugin system.
 
@@ -27,7 +27,8 @@ Volumio handles a play queue where items are provided by music services. There'r
 
 To manage the play queue the plugin shall implement the following methods:
 
-	AGGIUNGERE METODI
+* explodeUri
+* 
 
 
 ## Interface

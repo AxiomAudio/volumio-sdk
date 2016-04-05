@@ -38,6 +38,66 @@ The following methods have to be implemented in a music service plugin.
 
 ### handleBrowseUri
 
+This method implements the logic that allows browsing through the service library. The method is invoked with a string parameter, the URI of a certain level or item in the library. The method shall return a promise that resolves to a JSON structure like the following:
+
+		{
+		        navigation: {
+		            prev: {
+		                uri: 'spotify'
+		            },
+		            list: [{
+		                service: 'spop',
+		                type: 'folder',
+		                title: 'Playlists',
+		                artist: '',
+		                album: '',
+		                icon: 'fa fa-folder-open-o',
+		                uri: 'spotify/playlists'
+		            }
+
+		            ]
+		        }
+		    }
+
+The navigation/prev section provided the URI of the parent level of the item. This is used to navigate backward in the music library. The navigation/list section provides an array of JSON objects, each one representing an item (either a song or folder) that is hierarchically a child of the item represented by the input URI. The JSON object shall specify:
+* service: a string identifying the service
+* type: 'folder' or 'song'
+* title: Name to be dispalyed for the item
+* artist: The artist of the song
+* album: The album to which the song belongs
+* icon: The icon to be displayed. See examples below for the values
+* uri: URI of the item
+
+The following is an example of a folder containing a song and another folder:
+
+		{
+                navigation: {
+                    prev: {
+                        uri: 'myMusic/user'
+                    },
+                    list: [{
+                        service: 'mymusic',
+                        type: 'folder',
+                        title: 'Playlists',
+                        artist: '',
+                        album: '',
+                        icon: 'fa fa-folder-open-o',
+                        uri: 'myMusic/user/playlists'
+                    },
+		{
+                    service: 'mymusic',
+                    type: 'song',
+                    title: 'The Pretender',
+                    artist: 'Foo Fighters',
+                    album: 'Greatest Hits',
+                    icon: 'fa fa-list-ol',
+                    uri: 'mymusic/user/the_pretender.mp3'
+                }
+
+                    ]
+                }
+            }
+
 
 
 ### explodeUri
