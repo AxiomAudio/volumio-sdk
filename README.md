@@ -7,7 +7,7 @@ This repository contains the Volumio SDK. The purpose of this plugin is to give 
 The SDK is composed of the following items:
 
 *	A plugin skeleton for rapid startup of development
-*	API Documentation 
+*	[API Documentation](Docs/API-main.md "API Documentation") 
 *	A tester application for testing
 
 ## Development flow
