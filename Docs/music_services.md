@@ -1,14 +1,47 @@
 # Music services
 
-Music services are plugins that enhance VOlumio with support for new music systems or streaming.
+Music services are plugins that enhance Volumio with support for new music systems or streaming.
+
+## General concepts
+
+### Music library structure
+
+The music library handled by the plugin is accessible through the Volumio UI in a hierarchial order. This means that a directory like structure is shown to the user that can navigate through it by clicking on folder items. To allow this the plugin shall implement specific methods and return the appropriate information in the expected format. The plugin is not in any way forced to internally manage music in the same structure it gives as representation, but it is required to understand the references to songs (URI in the following) the UI will send to the backend when adding a song to the queue.
+
+To add the music library to the Volumio system the plugin shall invoke the coreCommand as follows:
+
+		var data = {name: 'myMusicLibrary', 
+				uri: 'myMusicLibraryURIStart',
+				plugin_type:'music_service',
+				plugin_name:'myMusic'};
+
+		self.commandRouter.volumioAddToBrowseSources(data);
+
+Through this call the system knows the any URI that starts witht the string myMusicLibraryURIStart shall be forwarded to the myMusicLibrary plugin for handling. Calling this method will add an entry in the "Browse" section in Volumio.
+
+Any item in the music library is identified by a URI. These are returned by the plugin as content of the handleBrowseUri method which allows the browsing functionality (see method definition for a detailed structure). When the user clicks on an item in the browse section the method handleBrowseUri is invoked with the URI of the item as input parameter. The plugin shall handle this request and provide the following level of the tree, if any. Folders and items are specified in a different way in the response thus it is impossible for the UI to ask for a deeper level in case the plugin returned only files. When an item is put in the queue or directly played its URI is provided to the plugin system.
+
+### Play Queue 
+
+Volumio handles a play queue where items are provided by music services. There're no constraints in the service originator so the user is free to mix songs from any service in any sequence he likes. When put in play the song is taken from the queue and the corresponding plugin is invoked. For this reason Volumio queues and plays one song at the time at service level.
+
+To manage the play queue the plugin shall implement the following methods:
+
+	AGGIUNGERE METODI
+
 
 ## Interface
 
 The following methods have to be implemented in a music service plugin. 
 
+
+### handleBrowseUri
+
+
+
 ### explodeUri
 
-This method is invoke by volumio when a uri needs to be added to the queue. The purpose of this method is to examine the uri
+This method is invoked by volumio when a uri needs to be added to the queue. The purpose of this method is to examine the uri
 and explode it to an array of uri if needed. As an example a folder uri will be exploded in an array of uris, each of them
 representing the media file contianed inside the folder.
 
@@ -27,4 +60,25 @@ The method returns a promise that shall be resolved with an array of uris. Each 
             albumart: '/albumart'
         }
 
+### stop
+
+### resume
+
+### pause
+
+### seek
+
+### clearAddPlayTrack
+
+This method is invoked by the internal state machine to add a track to the music system. To manage multiple music systems the state machine is forced to queue and play one track at the time, even if two songs are contiguous in the system queue. The method shall accept a JSON as input parameter with the following format:
+
+        {
+            uri: "/a/b/c.mp3",
+            service: '<MY-SERVICE>'
+        }
+
+Uri is the uri of the song, as returned by the browsing methods. Service is the service identifier.
+When invoked the plugin shall take care of stopping any play from its own player (e.g. mpd plugin will stop any play, if any, from ther mpd daemon), clear the queue, add the new song and then start playing it. 
+
+A Promise is foreseen to be returned in order to notify the end of the task.
 
